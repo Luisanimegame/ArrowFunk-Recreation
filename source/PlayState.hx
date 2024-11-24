@@ -5189,6 +5189,25 @@ class PlayState extends MusicBeatState
 			var animToPlay:String = singAnimations[Std.int(Math.abs(daNote.noteData))] + 'miss' + daNote.animSuffix;
 			char.playAnim(animToPlay, true);
 		}
+		
+		if(char.hasMissAnimations)
+		{
+			if(daNote.noteType == 'Dodge Note') { 
+                if(char.animOffsets.exists('damage') && char.curCharacter.startsWith('bidu')) {
+                    char.playAnim('damage', true);
+                }
+            }
+
+			var daAlt = '';
+			if(daNote.noteType == 'Alt Animation') daAlt = '-alt';
+
+			if(daNote.noteType == 'Shoot Note') daAlt = '-shoot';
+
+			if(daNote.noteType != 'Dodge Note') { 
+				var animToPlay:String = singAnimations[Std.int(Math.abs(daNote.noteData))] + 'miss' + daAlt;
+				char.playAnim(animToPlay, true);
+			}
+		}
 
 		callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 	}
@@ -5241,6 +5260,13 @@ class PlayState extends MusicBeatState
 
 	function opponentNoteHit(note:Note):Void
 	{
+		if(note.noteType == 'Shoot Note') {
+            var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))] + '-shoot';
+                dad.playAnim(animToPlay);
+				FlxG.sound.play(Paths.sound('shoot'));
+            
+        }
+	
 		if (Paths.formatToSongPath(SONG.song) != 'tutorial')
 			camZooming = true;
 
@@ -5255,6 +5281,46 @@ class PlayState extends MusicBeatState
 			{
 				if (SONG.notes[curSection].altAnim && !SONG.notes[curSection].gfSection) {
 					altAnim = '-alt';
+				}
+			}
+			
+			var curSection:Int = Math.floor(curStep / 16);
+			if (SONG.notes[curSection] != null)
+			{
+				if (SONG.notes[curSection].altAnim || note.noteType == 'Alt Animation') {
+					altAnim = '-alt';
+				}
+
+				if (SONG.notes[curSection].altAnim || note.noteType == 'Shoot Note') {
+					altAnim = '-shoot';
+					FlxG.camera.zoom += 0.005;
+					camHUD.zoom += 0.005;
+					FlxG.camera.shake(0.01, 0.03);
+
+					
+					if (curStage == 'favela' || curStage == 'favelanoite' )
+						{
+						if (kleistate == 2)
+							{
+								kleitin.animation.play('susto', true);
+							}
+
+						if (kleistate == 3)
+							{
+								kleitin.animation.play('bala', true);
+							}
+						}
+					
+
+					if (gfmedo == true) {
+						gf.playAnim('scared', true);
+					}
+					//AQUI CARAI
+				}
+
+				if (SONG.notes[curSection].altAnim || note.noteType == 'Dodge Note') {
+					altAnim = '-dodge';
+
 				}
 			}
 
@@ -5338,6 +5404,14 @@ class PlayState extends MusicBeatState
 			health += note.hitHealth * healthGain;
 
 			if(!note.noAnimation) {
+				if(!note.noAnimation) {
+				var daAlt = '';
+				if(note.noteType == 'Alt Animation') daAlt = '-alt';
+
+				if(note.noteType == 'Shoot Note') daAlt = '-shoot';
+
+				if(note.noteType == 'Dodge Note') daAlt = '-dodge';
+	
 				var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))];
 
 				if(note.gfNote)
