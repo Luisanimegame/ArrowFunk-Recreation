@@ -137,14 +137,22 @@ class Note extends FlxSprite
 					colorSwap.hue = 0;
 					colorSwap.saturation = 0;
 					colorSwap.brightness = 0;
-					lowPriority = true;
-
 					if(isSustainNote) {
 						missHealth = 0.1;
 					} else {
-						missHealth = 0.3;
+						missHealth = 0.25;
 					}
 					hitCausesMiss = true;
+				case 'Shoot Note':
+					reloadNote('SHOOT');
+					noteSplashTexture = 'SHOOTnoteSplashes';
+				case 'Dodge Note':
+					reloadNote('SHOOT');
+					noteSplashTexture = 'SHOOTnoteSplashes';
+					colorSwap.hue = 0;
+					colorSwap.saturation = 0;
+					colorSwap.brightness = 0;
+					missHealth = 0.75;
 				case 'Alt Animation':
 					animSuffix = '-alt';
 				case 'No Animation':
