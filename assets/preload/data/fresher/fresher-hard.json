@@ -1,7 +1,6 @@
 {
 	"song": {
 		"player1": "bidu",
-		"gfVersion": "gf",
 		"player2": "sagu",
 		"notes": [
 			{
@@ -3060,7 +3059,7 @@
 				"mustHitSection": true
 			}
 		],
-		"player3": "barbara-blue-bite",
+		"gfVersion": "barbara-blue-bite",
 		"song": "Fresher",
 		"validScore": true,
 		"needsVoices": true,
