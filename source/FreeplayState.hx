@@ -283,8 +283,7 @@ class FreeplayState extends MusicBeatState
 		}
 		
 		chess.scrollX += 1 * 25 * elapsed;
-		chess.scrollY -= 1 * 25 * elapsed;
-
+		
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, CoolUtil.boundTo(elapsed * 24, 0, 1)));
 		lerpRating = FlxMath.lerp(lerpRating, intendedRating, CoolUtil.boundTo(elapsed * 12, 0, 1));
 
