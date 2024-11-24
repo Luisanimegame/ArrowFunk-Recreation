@@ -1710,20 +1710,20 @@ class PlayState extends MusicBeatState
 		add(songinfo);
 
 		iconP1 = new HealthIcon(boyfriend.healthIcon, true);
-		iconP1.y = healthBar.y - 75;
+		iconP1.y = healthBar.y - 20;
 		iconP1.visible = !ClientPrefs.hideHud;
 		iconP1.alpha = ClientPrefs.healthBarAlpha;
 		add(iconP1);
 
 		iconP2 = new HealthIcon(dad.healthIcon, false);
-		iconP2.y = healthBar.y - 75;
+		iconP2.y = healthBar.y - 20;
 		iconP2.visible = !ClientPrefs.hideHud;
 		iconP2.alpha = ClientPrefs.healthBarAlpha;
 		add(iconP2);
 		reloadHealthBarColors();
 
 		scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 20);
-		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		scoreTxt.setFormat(Paths.font("Vividly-Regular.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderSize = 1.25;
 		scoreTxt.visible = !ClientPrefs.hideHud;
@@ -2585,6 +2585,7 @@ class PlayState extends MusicBeatState
 	var finishTimer:FlxTimer = null;
 
 	// For being able to mess with the sprites on Lua
+	public var countdownEmoji:FlxSprite;
 	public var countdownReady:FlxSprite;
 	public var countdownSet:FlxSprite;
 	public var countdownGo:FlxSprite;
@@ -2688,10 +2689,99 @@ class PlayState extends MusicBeatState
 					bottomBoppers.dance(true);
 					santa.dance(true);
 				}
+				
+				if(curStage == 'baladamedo') {
+					
+					spookers.dance(true);
+
+				}
+
+				if(curStage == 'baladamedovirus') {
+
+					spookers.dance(true);
+					
+					if (curBeat % 1 == 0)
+						{
+							barbaravirus.animation.play('danceleft', true);
+						}
+					
+					if (curBeat % 2 == 0)
+						{
+							barbaravirus.animation.play('danceright', true);
+						}
+
+				}
+
+				if(curStage == 'favela') {
+					
+
+					danielzinho.dance(true);
+					
+					if (kleistate == 2)
+						{
+							if (curBeat % 2 == 0)
+							kleitin.animation.play('idle', true);
+						}
+
+					if (kleistate == 3)
+						{
+							if (curBeat % 2 == 0)
+							kleitin.animation.play('dance', true);
+						}
+
+						if (curBeat % 2 == 0)
+							{
+							daniel.dance(true);
+		
+							}
+
+					busao.dance(true);
+
+				}
+
+				if(curStage == 'favelanoite'){
+					
+					if (kleistate == 2)
+						{
+							if (curBeat % 2 == 0)
+							kleitin.animation.play('idle', true);
+						}
+
+					if (kleistate == 3)
+						{
+							if (curBeat % 2 == 0)
+							kleitin.animation.play('dance', true);
+						}
+
+					
+						//pessoas.animation.play('dance', true);
+						
+						busao.dance(true);
+
+				}
 
 				switch (swagCounter)
 				{
 					case 0:
+						countdownEmoji = new FlxSprite().loadGraphic(Paths.image(introAlts[0]));
+						countdownEmoji.scrollFactor.set();
+						countdownEmoji.updateHitbox();
+
+						if (PlayState.isPixelStage)
+							countdownEmoji.setGraphicSize(Std.int(countdownEmoji.width * daPixelZoom));
+
+						countdownEmoji.screenCenter();
+						countdownEmoji.antialiasing = antialias;
+						add(countdownEmoji);
+						FlxTween.tween(countdownEmoji, {/*y: countdownEmoji.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
+							ease: FlxEase.cubeInOut,
+							onComplete: function(twn:FlxTween)
+							{
+								remove(countdownEmoji);
+								countdownEmoji.destroy();
+							}
+						});
+						
 						FlxG.sound.play(Paths.sound('intro3' + introSoundsSuffix), 0.6);
 					case 1:
 						countdownReady = new FlxSprite().loadGraphic(Paths.image(introAlts[0]));
@@ -7224,6 +7314,138 @@ class PlayState extends MusicBeatState
 
 				if(heyTimer <= 0) bottomBoppers.dance(true);
 				santa.dance(true);
+				
+			case 'baladamedo':
+			
+			if (dancefvel == 1) {
+
+				dancef.animation.play('floor' + ((curBeat % 5) + 1));
+
+			}
+			else if (dancefvel == 3){
+
+				dancef.animation.play('floor' + ((Math.floor(curBeat / 4) % 5) + 1));
+					
+			}
+			else {
+
+				dancef.animation.play('floor' + ((Math.floor(curBeat / 2) % 5) + 1));
+					
+			}
+
+
+			if (spookersvel == 1) {
+
+				if (curBeat % 1 == 0)
+					{
+						spookers.dance(true);
+					}
+
+			}
+			else {
+
+				if (curBeat % 2 == 0)
+					{
+						spookers.dance(true);
+					}
+					
+			}
+
+			case 'baladamedovirus':
+			
+				if (dancefvel == 1) {
+
+					dancef.animation.play('floor' + ((curBeat % 5) + 1));
+	
+				}
+				else if (dancefvel == 3){
+	
+					dancef.animation.play('floor' + ((Math.floor(curBeat / 4) % 5) + 1));
+						
+				}
+				else {
+	
+					dancef.animation.play('floor' + ((Math.floor(curBeat / 2) % 5) + 1));
+						
+				}
+	
+	
+				if (spookersvel == 1) {
+	
+					if (curBeat % 1 == 0)
+						{
+							spookers.dance(true);
+						}
+	
+				}
+				else {
+	
+					if (curBeat % 2 == 0)
+						{
+							spookers.dance(true);
+						}
+						
+				}
+
+				if (curBeat % 1 == 0)
+					{
+						barbaravirus.animation.play('danceleft', true);
+					}
+				
+				if (curBeat % 2 == 0)
+					{
+						barbaravirus.animation.play('danceright', true);
+					}
+				
+			case 'favela':
+
+					danielzinho.dance(true);
+					if (kleistate == 2)
+						{
+							if (curBeat % 2 == 0)
+							kleitin.animation.play('idle', true);
+						}
+
+					if (kleistate == 3)
+						{
+							if (curBeat % 2 == 0)
+							kleitin.animation.play('dance', true);
+						}
+
+					if (curBeat % 2 == 0)
+					{
+					daniel.dance(true);
+
+					}
+
+					busao.dance(true);
+			
+
+			case 'favelanoite':
+
+				
+				if (kleistate == 2)
+					{
+						if (curBeat % 2 == 0)
+						kleitin.animation.play('idle', true);
+					}
+
+				if (kleistate == 3)
+					{
+						if (curBeat % 2 == 0)
+						kleitin.animation.play('dance', true);
+					}
+
+					//pessoas.animation.play('dance', true);
+					
+					
+					busao.dance(true);
+
+					if (curBeat % 2 == 0)
+						{
+						daniel.dance(true);
+	
+						}
 
 			case 'limo':
 				if(!ClientPrefs.lowQuality) {
