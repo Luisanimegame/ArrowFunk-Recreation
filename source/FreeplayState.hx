@@ -13,11 +13,13 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import lime.utils.Assets;
 import flixel.system.FlxSound;
 import openfl.utils.Assets as OpenFlAssets;
 import WeekData;
+import flixel.addons.display.FlxTiledSprite;
 #if MODS_ALLOWED
 import sys.FileSystem;
 #end
@@ -32,6 +34,8 @@ class FreeplayState extends MusicBeatState
 	private static var curSelected:Int = 0;
 	var curDifficulty:Int = -1;
 	private static var lastDifficultyName:String = '';
+	
+	var chess:FlxTiledSprite;
 
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
@@ -47,6 +51,9 @@ class FreeplayState extends MusicBeatState
 	private var iconArray:Array<HealthIcon> = [];
 
 	var bg:FlxSprite;
+	var gradient:FlxSprite;
+	var menushit:FlxSprite;
+	var overlay:FlxSprite;
 	var intendedColor:Int;
 	var colorTween:FlxTween;
 
@@ -101,33 +108,51 @@ class FreeplayState extends MusicBeatState
 			}
 		}*/
 
-		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg = new FlxSprite().loadGraphic(Paths.image('menuBG'));
+		bg.x -= 10;
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
-		bg.screenCenter();
+		
+		chess = new FlxTiledSprite(Paths.image('mebg'), FlxG.width * 3, FlxG.width * 3, true, true);
+		chess.y -= 80;
+		add(chess);
+		
+		gradient = new FlxSprite().loadGraphic(Paths.image('fpbgradient'));
+		gradient.antialiasing = ClientPrefs.globalAntialiasing;
+		add(gradient);
+
+		menushit = new FlxSprite(0).loadGraphic(Paths.image('fpshit'));
+		menushit.updateHitbox();
+		menushit.x -= 1200;
+		menushit.alpha = 0.9;
+		menushit.screenCenter(Y);
+		menushit.antialiasing = ClientPrefs.globalAntialiasing;
+		add(menushit);
+		
+		FlxTween.tween(menushit, {x:-25}, 2.4, {ease: FlxEase.expoOut});
+		
+		overlay = new FlxSprite().loadGraphic(Paths.image('fpov3'));
+		overlay.antialiasing = ClientPrefs.globalAntialiasing;
+		add(overlay);
+		overlay.x += 1200;
+		FlxTween.tween(overlay, {x:0}, 2.4, {ease: FlxEase.expoOut});
 
 		grpSongs = new FlxTypedGroup<Alphabet>();
 		add(grpSongs);
 
 		for (i in 0...songs.length)
 		{
-			var songText:Alphabet = new Alphabet(90, 320, songs[i].songName, true);
+			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, songs[i].songName, true);
 			songText.isMenuItem = true;
-			songText.targetY = i - curSelected;
+			songText.targetY = i;
 			grpSongs.add(songText);
-
-			var maxWidth = 980;
-			if (songText.width > maxWidth)
-			{
-				songText.scaleX = maxWidth / songText.width;
-			}
-			songText.snapToPosition();
 
 			Paths.currentModDirectory = songs[i].folder;
 			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
 			icon.sprTracker = songText;
 
 			// using a FlxGroup is too much fuss!
+			icon.y = 20;
 			iconArray.push(icon);
 			add(icon);
 
@@ -256,6 +281,9 @@ class FreeplayState extends MusicBeatState
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
+		
+		chess.scrollX += 1 * 25 * elapsed;
+		chess.scrollY -= 1 * 25 * elapsed;
 
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, CoolUtil.boundTo(elapsed * 24, 0, 1)));
 		lerpRating = FlxMath.lerp(lerpRating, intendedRating, CoolUtil.boundTo(elapsed * 12, 0, 1));
@@ -482,20 +510,24 @@ class FreeplayState extends MusicBeatState
 		for (i in 0...iconArray.length)
 		{
 			iconArray[i].alpha = 0.6;
+			iconArray[curSelected].scale.set(0.8, 0.8);
 		}
 
 		iconArray[curSelected].alpha = 1;
+		iconArray[curSelected].scale.set(1, 1);
 
 		for (item in grpSongs.members)
 		{
 			item.targetY = bullShit - curSelected;
 			bullShit++;
+			item.scale.set(1, 0.9);
 
 			item.alpha = 0.6;
 			// item.setGraphicSize(Std.int(item.width * 0.8));
 
 			if (item.targetY == 0)
 			{
+				item.scale.set(1.0, 1.05);
 				item.alpha = 1;
 				// item.setGraphicSize(Std.int(item.width));
 			}
