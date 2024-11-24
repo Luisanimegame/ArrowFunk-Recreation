@@ -1,7 +1,6 @@
 {
 	"song": {
 		"player1": "bidu",
-		"gfVersion": "gf",
 		"player2": "sagu",
 		"notes": [
 			{
@@ -2914,7 +2913,7 @@
 				"mustHitSection": true
 			}
 		],
-		"player3": "barbara-blue",
+		"gfVersion": "barbara-blue",
 		"song": "Reboop",
 		"validScore": true,
 		"needsVoices": true,
