@@ -191,7 +191,6 @@ class PlayState extends MusicBeatState
 	public var combo:Int = 0;
 
 	private var healthBarBG:AttachedSprite;
-	private var healthBarOV:AttachedSprite;
 	public var healthBar:FlxBar;
 	var songPercent:Float = 0;
 
@@ -1679,10 +1678,8 @@ class PlayState extends MusicBeatState
 		healthBarBG.visible = !ClientPrefs.hideHud;
 		healthBarBG.xAdd = -4;
 		healthBarBG.yAdd = -4;
-		
+		add(healthBarBG);
 		if(ClientPrefs.downScroll) healthBarBG.y = 0.11 * FlxG.height;
-
-		
 
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, 2);
@@ -1692,24 +1689,26 @@ class PlayState extends MusicBeatState
 		healthBar.alpha = ClientPrefs.healthBarAlpha;
 		add(healthBar);
 		healthBarBG.sprTracker = healthBar;
-
-		healthBarOV = new AttachedSprite('healthBarOV');
-		healthBarOV.y = FlxG.height * 0.89;
-		healthBarOV.screenCenter(X);
-		healthBarOV.scrollFactor.set();
-		healthBarOV.visible = !ClientPrefs.hideHud;
-		healthBarOV.xAdd = -4;
-		healthBarOV.yAdd = -4;
-		add(healthBarOV);
-
-		if(ClientPrefs.downScroll) healthBarOV.y = 0.11 * FlxG.height;
-
+		
 		//Coisa la da musica sla
 		songinfo = new AttachedSprite('song/song-' + curSong);
 		songinfo.scrollFactor.set();
 		songinfo.visible = !ClientPrefs.hideHud;
 		songinfo.x -= 500;
 		add(songinfo);
+
+		iconP1 = new HealthIcon(boyfriend.healthIcon, true);
+		iconP1.y = healthBar.y - 75;
+		iconP1.visible = !ClientPrefs.hideHud;
+		iconP1.alpha = ClientPrefs.healthBarAlpha;
+		add(iconP1);
+
+		iconP2 = new HealthIcon(dad.healthIcon, false);
+		iconP2.y = healthBar.y - 75;
+		iconP2.visible = !ClientPrefs.hideHud;
+		iconP2.alpha = ClientPrefs.healthBarAlpha;
+		add(iconP2);
+		reloadHealthBarColors();
 
 		scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 20);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -1733,7 +1732,6 @@ class PlayState extends MusicBeatState
 		notes.cameras = [camHUD];
 		healthBar.cameras = [camHUD];
 		healthBarBG.cameras = [camHUD];
-		healthBarOV.cameras = [camHUD];
 		songinfo.cameras = [camHUD];
 		iconP1.cameras = [camHUD];
 		iconP2.cameras = [camHUD];
@@ -3381,6 +3379,7 @@ class PlayState extends MusicBeatState
 		{
 			iconP1.swapOldIcon();
 		}*/
+		
 		if (angryDad)
 			{
 				dad.playAnim('throwmic');
@@ -3409,7 +3408,7 @@ class PlayState extends MusicBeatState
 				balight.alpha = 0;
 				}
 		}
-		
+
 		callOnLuas('onUpdate', [elapsed]);
 
 		switch (curStage)
@@ -3581,11 +3580,11 @@ class PlayState extends MusicBeatState
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
 		// FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
 
-		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
+		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
 		iconP1.scale.set(mult, mult);
 		iconP1.updateHitbox();
 
-		var mult:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
+		var mult:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
 		iconP2.scale.set(mult, mult);
 		iconP2.updateHitbox();
 
@@ -3596,7 +3595,7 @@ class PlayState extends MusicBeatState
 
 		if (health > 2)
 			health = 2;
-		
+
 		if (healthBar.percent < 20)
 			iconP1.animation.curAnim.curFrame = 1;
 		else if (healthBar.percent > 80)
@@ -6459,7 +6458,7 @@ class PlayState extends MusicBeatState
 					
 					
 				}
-				
+
 				if (curSong == 'Shacklesz')
 					{
 						
@@ -7162,20 +7161,8 @@ class PlayState extends MusicBeatState
 			notes.sort(FlxSort.byY, ClientPrefs.downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 		}
 
-		if (curBeat % 1 == 0)
-			{
-				
-				iconP1.scale.set(0.9, 0.9);
-				iconP2.scale.set(1.1, 1.1);
-			}
-		
-		if (curBeat % 2 == 0)
-			{
-				iconP1.scale.set(1.1, 1.1);
-				iconP2.scale.set(0.9, 0.9);
-			}
-			
-	
+		iconP1.scale.set(1.2, 1.2);
+		iconP2.scale.set(1.2, 1.2);
 
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
