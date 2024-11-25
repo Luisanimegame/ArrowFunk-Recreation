@@ -48,7 +48,7 @@ class MainMenuState extends MusicBeatState
 	var camFollowPos:FlxObject;
 	var debugKeys:Array<FlxKey>;
 	//var chess:FlxSprite;
-	var chess:FlxBackdrop;
+	var chess:FlxTiledSprite;
 
 	override function create()
 	{
@@ -343,7 +343,7 @@ class MainMenuState extends MusicBeatState
 					});
 				}
 			}
-			#if (desktop || mobile)
+			#if !mobile
 			else if (FlxG.keys.anyJustPressed(debugKeys))
 			{
 				selectedSomethin = true;
