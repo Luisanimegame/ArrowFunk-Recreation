@@ -89,7 +89,8 @@ class MainMenuState extends MusicBeatState
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
 		
-		chess = new FlxTiledSprite(Paths.image('mebg'), FlxG.width * 3, FlxG.width * 3, true, true);
+		chess = new FlxTiledSprite(Paths.image('mmbg'), FlxG.width * 3, FlxG.width * 3, true, true);
+		chess.scrollFactor.set(0, 0.1);
 		chess.y -= 80;
 		add(chess);
 		
