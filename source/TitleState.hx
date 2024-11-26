@@ -65,7 +65,6 @@ class TitleState extends MusicBeatState
 	var ngSpr:FlxSprite;
 	var logoSpr:FlxSprite;
 	var bfSpr:FlxSprite;
-	var ngSpr:FlxSprite;
 	
 	var chess:FlxTiledSprite;
 	
