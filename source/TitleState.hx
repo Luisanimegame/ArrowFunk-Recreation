@@ -64,7 +64,6 @@ class TitleState extends MusicBeatState
 	var textGroup:FlxGroup;
 	var ngSpr:FlxSprite;
 	var logoSpr:FlxSprite;
-	var bfSpr:FlxSprite;
 	
 	var chess:FlxTiledSprite;
 	
@@ -404,14 +403,6 @@ class TitleState extends MusicBeatState
 		ngSpr.updateHitbox();
 		ngSpr.screenCenter(X);
 		ngSpr.antialiasing = ClientPrefs.globalAntialiasing;
-		
-		bfSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('bufren'));
-		add(bfSpr);
-		bfSpr.visible = false;
-		bfSpr.setGraphicSize(Std.int(bfSpr.width * 0.8));
-		bfSpr.updateHitbox();
-		bfSpr.screenCenter(X);
-		bfSpr.antialiasing = true;
 
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
 
@@ -648,104 +639,70 @@ class TitleState extends MusicBeatState
 			switch (sickBeats)
 			{
 				case 1:
-						createCoolText(['Mod by'], 15);
-					case 2:
-						deleteCoolText();
-						createCoolText(['Mod by yoisabo (Port by Gabo)'], 15);
-					case 3:
-						addMoreText('roxo depressivo', 15);
-					case 4:
-						addMoreText('hiro mizuki', 15);
-					case 5:
-						addMoreText('im not sonic', 15);
-					case 6:
-						deleteCoolText();
-						addMoreText('beastlychip', 15);
-					case 7:
-						addMoreText('tio sans', 15);
-					case 8:
-						addMoreText('tyefling', 15);
-					case 9:
-						deleteCoolText();
-						createCoolText(['Psych Engine by'], 15);
-					case 10:
-						addMoreText('Shadow Mario', 15);
-					case 11:
-						addMoreText('RiverOaken', 15);
-					case 12:
-						addMoreText('shubs', 15);
-					case 13:
-						deleteCoolText();
-						createCoolText(['NOT'], -40);
-					case 14:
-						deleteCoolText();
-						createCoolText(['Not ASSOCIATED'], -40);
-					case 15:
-						deleteCoolText();
-						createCoolText(['Not associated WITH'], -40);
-					case 16:
-						addMoreText('', -40);
-						addMoreText('newgrounds', -40);
-						ngSpr.visible = true;
-					case 17:
-						deleteCoolText();
-						ngSpr.visible = false;
-						createCoolText(['another'], 15);
-					case 18:
-						deleteCoolText();
-						createCoolText(['another "remix"'], 15);
-					case 19:
-						deleteCoolText();
-						createCoolText(['another "remix" mod'], 15);
-					case 20:
-						addMoreText('yaay', 15);
-					case 21:
-						deleteCoolText();
-						createCoolText(['i dont know'], 15);	
-					case 22:
-						deleteCoolText();
-						createCoolText(['i dont know what to'], 15);	
-					case 23:
-						deleteCoolText();
-						createCoolText(['i dont know what to'], 15);	
-						addMoreText('write here', 15);
-						addMoreText('LOL', 15);
-					case 24:
-						deleteCoolText();
-						addMoreText('look at this little dude', 15);
-						
-					case 25:
-						bfSpr.visible = true;
-						
-					case 26:
-						deleteCoolText();
-						bfSpr.visible = false;
-						addMoreText(curWacky[0]);
-						
-					case 27:
-						addMoreText(curWacky[1]);
-					case 28:
-						deleteCoolText();
-						createCoolText(['fnf'], -40);
-						
-					case 29:
-						
-						addMoreText('arrow', -40);
-						
-					case 30:
-						
-						addMoreText('funk', -40);
-						
-					case 31:
-						deleteCoolText();
-						addMoreText('', -40);
-						addMoreText('LESGOOOOOOOO', -40);
-						
-						
-					case 32:
-							deleteCoolText();
+					//FlxG.sound.music.stop();
+					FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+					FlxG.sound.music.fadeIn(4, 0, 0.7);
+				case 2:
+					#if PSYCH_WATERMARKS
+					createCoolText(['Psych Engine by'], 15);
+					#else
+					createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
+					#end
+				// credTextShit.visible = true;
+				case 4:
+					#if PSYCH_WATERMARKS
+					addMoreText('Shadow Mario', 15);
+					addMoreText('RiverOaken', 15);
+					addMoreText('shubs', 15);
+					#else
+					addMoreText('present');
+					#end
+				// credTextShit.text += '\npresent...';
+				// credTextShit.addText();
+				case 5:
+					deleteCoolText();
+				// credTextShit.visible = false;
+				// credTextShit.text = 'In association \nwith';
+				// credTextShit.screenCenter();
+				case 6:
+					#if PSYCH_WATERMARKS
+					createCoolText(['Not associated', 'with'], -40);
+					#else
+					createCoolText(['In association', 'with'], -40);
+					#end
+				case 8:
+					addMoreText('newgrounds', -40);
+					ngSpr.visible = true;
+				// credTextShit.text += '\nNewgrounds';
+				case 9:
+					deleteCoolText();
+					ngSpr.visible = false;
+				// credTextShit.visible = false;
 
-							skipIntro();
+				// credTextShit.text = 'Shoutouts Tom Fulp';
+				// credTextShit.screenCenter();
+				case 10:
+					createCoolText([curWacky[0]]);
+				// credTextShit.visible = true;
+				case 12:
+					addMoreText(curWacky[1]);
+				// credTextShit.text += '\nlmao';
+				case 13:
+					deleteCoolText();
+				// credTextShit.visible = false;
+				// credTextShit.text = "Friday";
+				// credTextShit.screenCenter();
+				case 14:
+					addMoreText('Friday');
+				// credTextShit.visible = true;
+				case 15:
+					addMoreText('Night');
+				// credTextShit.text += '\nNight';
+				case 16:
+					addMoreText('Funkin'); // credTextShit.text += '\nFunkin';
+
+				case 17:
+					skipIntro();
 			}
 		}
 	}
