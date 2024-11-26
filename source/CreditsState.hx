@@ -214,6 +214,8 @@ class CreditsState extends MusicBeatState
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
+		
+		chess.scrollX += 1 * 25 * elapsed;
 
 		if(!quitting)
 		{
@@ -250,13 +252,15 @@ class CreditsState extends MusicBeatState
 			}
 
 			if (controls.BACK)
-		{
-			if(colorTween != null) {
-				colorTween.cancel();
-			}
-			FlxG.sound.play(Paths.sound('cancelMenu'));
-			MusicBeatState.switchState(new MainMenuState());
+			{
+				if(colorTween != null) {
+					colorTween.cancel();
+				}
+				FlxG.sound.play(Paths.sound('cancelMenu'));
+				MusicBeatState.switchState(new MainMenuState());
+				quitting = true;
 		}
+
 		if(controls.ACCEPT) {
 			if (curSelected == 43)
 				{
