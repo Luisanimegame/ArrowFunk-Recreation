@@ -35,6 +35,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import openfl.Assets;
+import flixel.addons.display.FlxTiledSprite;
 
 using StringTools;
 typedef TitleData =
@@ -62,6 +63,11 @@ class TitleState extends MusicBeatState
 	var credTextShit:Alphabet;
 	var textGroup:FlxGroup;
 	var ngSpr:FlxSprite;
+	var logoSpr:FlxSprite;
+	var bfSpr:FlxSprite;
+	var ngSpr:FlxSprite;
+	
+	var chess:FlxTiledSprite;
 	
 	var titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
 	var titleTextAlphas:Array<Float> = [1, .64];
@@ -262,70 +268,63 @@ class TitleState extends MusicBeatState
 		Conductor.changeBPM(titleJSON.bpm);
 		persistentUpdate = true;
 
-		var bg:FlxSprite = new FlxSprite();
-
-		if (titleJSON.backgroundSprite != null && titleJSON.backgroundSprite.length > 0 && titleJSON.backgroundSprite != "none"){
-			bg.loadGraphic(Paths.image(titleJSON.backgroundSprite));
-		}else{
-			bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		}
-
+		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		// bg.antialiasing = ClientPrefs.globalAntialiasing;
 		// bg.setGraphicSize(Std.int(bg.width * 0.6));
 		// bg.updateHitbox();
 		add(bg);
 
-		logoBl = new FlxSprite(titleJSON.titlex, titleJSON.titley);
+		logoBl = new FlxSprite(-150, -100);
 		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
-
 		logoBl.antialiasing = ClientPrefs.globalAntialiasing;
-		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
+		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24);
 		logoBl.animation.play('bump');
 		logoBl.updateHitbox();
+		logoBl.y = 4000;
 		// logoBl.screenCenter();
 		// logoBl.color = FlxColor.BLACK;
+		
+		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('titlebg1'));
+		bg.setGraphicSize(Std.int(bg.width * 1.175));
+		bg.updateHitbox();
+		bg.screenCenter();
+		bg.antialiasing = ClientPrefs.globalAntialiasing;
+		add(bg);
+		
+		chess = new FlxTiledSprite(Paths.image('mebg'), FlxG.width * 3, FlxG.width * 3, true, true);
+		chess.y -= 80;
+		add(chess);
+		
+		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBGoverlay'));
+		bg.setGraphicSize(Std.int(bg.width * 1.175));
+		bg.updateHitbox();
+		bg.screenCenter();
+		bg.antialiasing = ClientPrefs.globalAntialiasing;
+		add(bg);
 
 		swagShader = new ColorSwap();
-		gfDance = new FlxSprite(titleJSON.gfx, titleJSON.gfy);
-
-		var easterEgg:String = FlxG.save.data.psychDevsEasterEgg;
-		if(easterEgg == null) easterEgg = ''; //html5 fix
-
-		switch(easterEgg.toUpperCase())
+		/*if(!FlxG.save.data.psykaEasterEgg || !easterEggEnabled) {*/
+			gfDance = new FlxSprite(FlxG.width * 0.4, FlxG.height * 0.07);
+			gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle');
+			gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
+			gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
+		/*}
+		else //Psyka easter egg
 		{
-			#if TITLE_SCREEN_EASTER_EGG
-			case 'SHADOW':
-				gfDance.frames = Paths.getSparrowAtlas('ShadowBump');
-				gfDance.animation.addByPrefix('danceLeft', 'Shadow Title Bump', 24);
-				gfDance.animation.addByPrefix('danceRight', 'Shadow Title Bump', 24);
-			case 'RIVER':
-				gfDance.frames = Paths.getSparrowAtlas('RiverBump');
-				gfDance.animation.addByIndices('danceLeft', 'River Title Bump', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
-				gfDance.animation.addByIndices('danceRight', 'River Title Bump', [29, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
-			case 'SHUBS':
-				gfDance.frames = Paths.getSparrowAtlas('ShubBump');
-				gfDance.animation.addByPrefix('danceLeft', 'Shub Title Bump', 24, false);
-				gfDance.animation.addByPrefix('danceRight', 'Shub Title Bump', 24, false);
-			case 'BBPANZU':
-				gfDance.frames = Paths.getSparrowAtlas('BBBump');
-				gfDance.animation.addByIndices('danceLeft', 'BB Title Bump', [14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], "", 24, false);
-				gfDance.animation.addByIndices('danceRight', 'BB Title Bump', [27, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], "", 24, false);
-			#end
+			gfDance = new FlxSprite(FlxG.width * 0.4, FlxG.height * 0.04);
+			gfDance.frames = Paths.getSparrowAtlas('psykaDanceTitle');
+			gfDance.animation.addByIndices('danceLeft', 'psykaDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
+			gfDance.animation.addByIndices('danceRight', 'psykaDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
+		}*/
 
-			default:
-			//EDIT THIS ONE IF YOU'RE MAKING A SOURCE CODE MOD!!!!
-			//EDIT THIS ONE IF YOU'RE MAKING A SOURCE CODE MOD!!!!
-			//EDIT THIS ONE IF YOU'RE MAKING A SOURCE CODE MOD!!!!
-				gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle');
-				gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
-				gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
-		}
+		gfDance.y -= 35;
+		gfDance.x -= 570;
+
 		gfDance.antialiasing = ClientPrefs.globalAntialiasing;
-
 		add(gfDance);
 		gfDance.shader = swagShader.shader;
 		add(logoBl);
-		logoBl.shader = swagShader.shader;
+		//logoBl.shader = swagShader.shader;
 
 		titleText = new FlxSprite(titleJSON.startx, titleJSON.starty);
 		#if (desktop && MODS_ALLOWED)
@@ -390,6 +389,14 @@ class TitleState extends MusicBeatState
 		// credTextShit.alignment = CENTER;
 
 		credTextShit.visible = false;
+		
+		logoSpr = new FlxSprite(0, FlxG.height * 0.4).loadGraphic(Paths.image('titlelogo'));
+		add(logoSpr);
+		logoSpr.visible = false;
+		logoSpr.setGraphicSize(Std.int(logoSpr.width * 0.55));
+		logoSpr.updateHitbox();
+		logoSpr.screenCenter(X);
+		logoSpr.antialiasing = ClientPrefs.globalAntialiasing;
 
 		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('newgrounds_logo'));
 		add(ngSpr);
@@ -398,6 +405,14 @@ class TitleState extends MusicBeatState
 		ngSpr.updateHitbox();
 		ngSpr.screenCenter(X);
 		ngSpr.antialiasing = ClientPrefs.globalAntialiasing;
+		
+		bfSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('bufren'));
+		add(bfSpr);
+		bfSpr.visible = false;
+		bfSpr.setGraphicSize(Std.int(bfSpr.width * 0.8));
+		bfSpr.updateHitbox();
+		bfSpr.screenCenter(X);
+		bfSpr.antialiasing = true;
 
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
 
@@ -435,6 +450,8 @@ class TitleState extends MusicBeatState
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
 		// FlxG.watch.addQuick('amp', FlxG.sound.music.amplitude);
+		
+		chess.scrollX += 1 * 25 * elapsed;
 
 		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER || controls.ACCEPT;
 
@@ -484,6 +501,10 @@ class TitleState extends MusicBeatState
 			
 			if(pressedEnter)
 			{
+				FlxTween.tween(FlxG.camera, {x:2000}, 3.4, {ease: FlxEase.expoInOut});
+				FlxTween.tween(gfDance, {y:2000}, 3.4, {ease: FlxEase.expoInOut});
+				FlxTween.tween(gfDance, {angle:180}, 3.8, {ease: FlxEase.expoInOut});
+				
 				titleText.color = FlxColor.WHITE;
 				titleText.alpha = 1;
 				
@@ -628,70 +649,232 @@ class TitleState extends MusicBeatState
 			switch (sickBeats)
 			{
 				case 1:
-					//FlxG.sound.music.stop();
-					FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
-					FlxG.sound.music.fadeIn(4, 0, 0.7);
-				case 2:
-					#if PSYCH_WATERMARKS
+						createCoolText(['Mod by'], 15);
+					case 2:
+						deleteCoolText();
+						createCoolText(['Mod by yoisabo'], 15);
+					case 3:
+						addMoreText('roxo depressivo', 15);
+					case 4:
+						addMoreText('hiro mizuki', 15);
+					case 5:
+						addMoreText('im not sonic', 15);
+					case 6:
+						deleteCoolText();
+						addMoreText('beastlychip', 15);
+					case 7:
+						addMoreText('tio sans', 15);
+					case 8:
+						addMoreText('tyefling', 15);
+					case 9:
+						deleteCoolText();
+						createCoolText(['Psych Engine by'], 15);
+					case 10:
+						addMoreText('Shadow Mario', 15);
+					case 11:
+						addMoreText('RiverOaken', 15);
+					case 12:
+						addMoreText('shubs', 15);
+					case 13:
+						deleteCoolText();
+						createCoolText(['NOT'], -40);
+					case 14:
+						deleteCoolText();
+						createCoolText(['Not ASSOCIATED'], -40);
+					case 15:
+						deleteCoolText();
+						createCoolText(['Not associated WITH'], -40);
+					case 16:
+						addMoreText('', -40);
+						addMoreText('newgrounds', -40);
+						ngSpr.visible = true;
+					case 17:
+						deleteCoolText();
+						ngSpr.visible = false;
+						createCoolText(['another'], 15);
+					case 18:
+						deleteCoolText();
+						createCoolText(['another "remix"'], 15);
+					case 19:
+						deleteCoolText();
+						createCoolText(['another "remix" mod'], 15);
+					case 20:
+						addMoreText('yaay', 15);
+					case 21:
+						deleteCoolText();
+						createCoolText(['i dont know'], 15);	
+					case 22:
+						deleteCoolText();
+						createCoolText(['i dont know what to'], 15);	
+					case 23:
+						deleteCoolText();
+						createCoolText(['i dont know what to'], 15);	
+						addMoreText('write here', 15);
+						addMoreText('LOL', 15);
+					case 24:
+						deleteCoolText();
+						addMoreText('look at this little dude', 15);
+						
+					case 25:
+						bfSpr.visible = true;
+						
+					case 26:
+						deleteCoolText();
+						bfSpr.visible = false;
+						addMoreText(curWacky[0]);
+						
+					case 27:
+						addMoreText(curWacky[1]);
+					case 28:
+						deleteCoolText();
+						createCoolText(['fnf'], -40);
+						
+					case 29:
+						
+						addMoreText('arrow', -40);
+						
+					case 30:
+						
+						addMoreText('funk', -40);
+						
+					case 31:
+						deleteCoolText();
+						addMoreText('', -40);
+						addMoreText('LESGOOOOOOOO', -40);
+						
+						
+					case 32:
+							deleteCoolText();
+
+							skipIntro();
+						
+							
+						/*
+					case 2:
+						deleteCoolText();
+						createCoolText(['Psych Engine by'], 15);
+					case 3:
+						addMoreText('Shadow Mario', 15);
+					case 4:
+						addMoreText('RiverOaken', 15);
+					case 5:
+						addMoreText('shubs', 15);
+						
+					case 6:
+						
+						deleteCoolText();
+					case 7:
+						createCoolText(['Not associated'], -40);
+					case 8:
+						addMoreText('with', -40);
+					case 9:
+						addMoreText('newgrounds', -40);
+						ngSpr.visible = true;
+					case 10:
+						deleteCoolText();
+						ngSpr.visible = false;					
+					case 11:
+						createCoolText(['a cool mod'], 15);
+					case 12:
+						addMoreText('made for', 15);
+					case 13:
+						addMoreText('the cool hit game', 15);
+					case 14:
+						deleteCoolText();
+						createCoolText(['AMOGUS'], 15);
+					case 15:
+						deleteCoolText();
+						createCoolText(['Friday'], 15);
+					case 16:
+						addMoreText('Night', 15);
+					case 17:
+						addMoreText('Funkin', 15);
+					case 18:
+					deleteCoolText();
+					createCoolText(['18'], 15);
+					case 19:
+					deleteCoolText();
+					createCoolText(['19'], 15);
+					case 20:
+					deleteCoolText();
+					createCoolText(['20'], 15);
+					case 21:
+					deleteCoolText();
+					createCoolText(['21'], 15);
+					case 22:
+					deleteCoolText();
+					createCoolText(['22'], 15);
+					case 23:
+					deleteCoolText();
+					createCoolText(['23'], 15);
+					case 24:
+					deleteCoolText();
+					createCoolText(['24'], 15);
+					case 25:
+					deleteCoolText();
+					createCoolText(['25'], 15);
+					case 26:
+					deleteCoolText();
+					createCoolText(['26'], 15);
+					*/
+					
+				/*
+				case 1:
+					
 					createCoolText(['Psych Engine by'], 15);
-					#else
-					createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
-					#end
+					
 				// credTextShit.visible = true;
-				case 4:
-					#if PSYCH_WATERMARKS
+				case 3:
+					
 					addMoreText('Shadow Mario', 15);
 					addMoreText('RiverOaken', 15);
 					addMoreText('shubs', 15);
-					#else
-					addMoreText('present');
-					#end
+					
 				// credTextShit.text += '\npresent...';
 				// credTextShit.addText();
-				case 5:
+				case 4:
 					deleteCoolText();
 				// credTextShit.visible = false;
 				// credTextShit.text = 'In association \nwith';
 				// credTextShit.screenCenter();
-				case 6:
-					#if PSYCH_WATERMARKS
+				case 5:
+					
 					createCoolText(['Not associated', 'with'], -40);
-					#else
-					createCoolText(['In association', 'with'], -40);
-					#end
-				case 8:
+					
+				case 7:
 					addMoreText('newgrounds', -40);
 					ngSpr.visible = true;
 				// credTextShit.text += '\nNewgrounds';
-				case 9:
+				case 8:
 					deleteCoolText();
 					ngSpr.visible = false;
 				// credTextShit.visible = false;
 
 				// credTextShit.text = 'Shoutouts Tom Fulp';
 				// credTextShit.screenCenter();
-				case 10:
+				case 9:
 					createCoolText([curWacky[0]]);
 				// credTextShit.visible = true;
-				case 12:
+				case 11:
 					addMoreText(curWacky[1]);
 				// credTextShit.text += '\nlmao';
-				case 13:
+				case 12:
 					deleteCoolText();
 				// credTextShit.visible = false;
 				// credTextShit.text = "Friday";
 				// credTextShit.screenCenter();
-				case 14:
-					addMoreText('Friday');
+				case 13:
+					addMoreText('FNF');
 				// credTextShit.visible = true;
-				case 15:
-					addMoreText('Night');
+				case 14:
+					addMoreText('Arrow');
 				// credTextShit.text += '\nNight';
-				case 16:
-					addMoreText('Funkin'); // credTextShit.text += '\nFunkin';
+				case 15:
+					addMoreText('Funk'); // credTextShit.text += '\nFunkin';
 
-				case 17:
+				case 16:
 					skipIntro();
+					*/
 			}
 		}
 	}
