@@ -251,6 +251,24 @@ class CreditsState extends MusicBeatState
 				}
 			}
 
+			if(controls.ACCEPT && (creditsStuff[curSelected][3] == null || creditsStuff[curSelected][3].length > 4)) {
+				CoolUtil.browserLoad(creditsStuff[curSelected][3]);
+				
+				clickfreddy += 1;
+				
+				if (clickfreddy == 87) {
+				CoolUtil.browserLoad(creditsStuff[curSelected][3]);
+				}
+				
+				if (clickfreddy <== 87) {
+				FlxG.sound.play(Paths.sound('fedy'));
+				}
+
+				if (clickfreddy >= 87) {
+						
+				clickfreddy = 0;	
+				}
+			}
 			if (controls.BACK)
 			{
 				if(colorTween != null) {
@@ -259,36 +277,8 @@ class CreditsState extends MusicBeatState
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				MusicBeatState.switchState(new MainMenuState());
 				quitting = true;
+			}
 		}
-
-		if(controls.ACCEPT) {
-			if (curSelected == 43)
-				{
-					clickfreddy += 1;
-				
-					if (clickfreddy == 87) {
-					CoolUtil.browserLoad(creditsStuff[curSelected][3]);
-					}
-					else
-					{
-					FlxG.sound.play(Paths.sound('fedy'));
-					}
-
-					if (clickfreddy >= 87) {
-						
-						clickfreddy = 0;
-						
-						}
-					
-				}
-			if (curSelected != 43)
-				{
-					CoolUtil.browserLoad(creditsStuff[curSelected][3]);
-				}
-			
-		}
-		super.update(elapsed);
-	}
 		
 		for (item in grpOptions.members)
 		{
