@@ -260,7 +260,7 @@ class CreditsState extends MusicBeatState
 				CoolUtil.browserLoad(creditsStuff[curSelected][3]);
 				}
 				
-				if (clickfreddy <== 87) {
+				if (clickfreddy != 0) {
 				FlxG.sound.play(Paths.sound('fedy'));
 				}
 
