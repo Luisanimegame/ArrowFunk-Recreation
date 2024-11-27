@@ -463,11 +463,12 @@ class TitleState extends MusicBeatState
 			
 			if(pressedEnter)
 			{
-				titleText.color = FlxColor.WHITE;
-				titleText.alpha = 1;
-				
+				FlxTween.tween(FlxG.camera, {x:2000}, 3.4, {ease: FlxEase.expoInOut});
+				FlxTween.tween(gfDance, {y:2000}, 3.4, {ease: FlxEase.expoInOut});
+				FlxTween.tween(gfDance, {angle:180}, 3.8, {ease: FlxEase.expoInOut});
+			
 				if(titleText != null) titleText.animation.play('press');
-
+				
 				FlxG.camera.flash(ClientPrefs.flashing ? FlxColor.WHITE : 0x4CFFFFFF, 1);
 				FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
 
@@ -607,10 +608,13 @@ class TitleState extends MusicBeatState
 			switch (sickBeats)
 			{
 				case 1:
+						//FlxG.sound.music.stop();
+						FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+						FlxG.sound.music.fadeIn(4, 0, 0.7);
 						createCoolText(['Mod by'], 15);
 					case 2:
 						deleteCoolText();
-						createCoolText(['Mod by yoisabo'], 15);
+						createCoolText(['Mod by yoisabo (Port by Gabo)'], 15);
 					case 3:
 						addMoreText('roxo depressivo', 15);
 					case 4:
@@ -772,6 +776,8 @@ class TitleState extends MusicBeatState
 			else //Default! Edit this one!!
 			{
 				remove(ngSpr);
+				remove(logoSpr);
+				remove(bfSpr);
 				remove(credGroup);
 				FlxG.camera.flash(FlxColor.WHITE, 4);
 
