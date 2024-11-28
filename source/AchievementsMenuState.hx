@@ -67,7 +67,7 @@ class AchievementsMenuState extends MusicBeatState
 			var achieveName:String = Achievements.achievementsStuff[achievementIndex[i]][2];
 			var optionText:Alphabet = new Alphabet(0, (100 * i) + 210, Achievements.isAchievementUnlocked(achieveName) ? Achievements.achievementsStuff[achievementIndex[i]][0] : '?', false);
 			optionText.isMenuItem = true;
-			optionText.x += 480;
+			optionText.x += 280;
 			optionText.targetY = i;
 			grpOptions.add(optionText);
 
