@@ -16,6 +16,7 @@ import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import flixel.graphics.FlxGraphic;
 import lime.net.curl.CURLCode;
 import WeekData;
 
@@ -30,9 +31,10 @@ class StoryMenuState extends MusicBeatState
 	public static var weekCompleted:Map<String, Bool> = new Map<String, Bool>();
 
 	var scoreText:FlxText;
-
-	private static var curDifficulty:Int = 1;
-
+	
+	private static var lastDifficultyName:String = '';
+	var curDifficulty:Int = 1;
+	
 	var txtWeekTitle:FlxText;
 	var bgSprite:FlxSprite;
 
@@ -46,6 +48,7 @@ class StoryMenuState extends MusicBeatState
 	var grpLocks:FlxTypedGroup<FlxSprite>;
 
 	var difficultySelectors:FlxGroup;
+	var sprDifficulty:FlxSprite;
 	var sprDifficultyGroup:FlxTypedGroup<FlxSprite>;
 	var leftArrow:FlxSprite;
 	var rightArrow:FlxSprite;
