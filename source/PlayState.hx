@@ -4573,9 +4573,7 @@ class PlayState extends MusicBeatState
 		if(achievementObj != null) {
 			return;
 		} else {
-			var achieve:String = checkForAchievement(['week1_nomiss', 'week2_nomiss', 'week3_nomiss', 'week4_nomiss',
-				'week5_nomiss', 'week6_nomiss', 'week7_nomiss', 'ur_bad',
-				'ur_good', 'hype', 'two_keys', 'toastie', 'debugger']);
+			var achieve:String = checkForAchievement(['tutorial_nomiss','week1_nomiss', 'week2_nomiss', 'week3_nomiss', 'debugger', 'cruzes']);
 
 			if(achieve != null) {
 				startAchievement(achieve);
@@ -7702,61 +7700,45 @@ class PlayState extends MusicBeatState
 	}
 
 	#if ACHIEVEMENTS_ALLOWED
-	private function checkForAchievement(achievesToCheck:Array<String> = null):String
-	{
-		if(chartingMode) return null;
-
+	private function checkForAchievement(achievesToCheck:Array<String>):String {
 		var usedPractice:Bool = (ClientPrefs.getGameplaySetting('practice', false) || ClientPrefs.getGameplaySetting('botplay', false));
 		for (i in 0...achievesToCheck.length) {
 			var achievementName:String = achievesToCheck[i];
 			if(!Achievements.isAchievementUnlocked(achievementName) && !cpuControlled) {
 				var unlock:Bool = false;
-				
-				if (achievementName.contains(WeekData.getWeekFileName()) && achievementName.endsWith('nomiss')) // any FC achievements, name should be "weekFileName_nomiss", e.g: "weekd_nomiss";
-				{
-					if(isStoryMode && campaignMisses + songMisses < 1 && CoolUtil.difficultyString() == 'HARD'
-						&& storyPlaylist.length <= 1 && !changedDifficulty && !usedPractice)
-						unlock = true;
-				}
 				switch(achievementName)
 				{
-					case 'ur_bad':
-						if(ratingPercent < 0.2 && !practiceMode) {
-							unlock = true;
-						}
-					case 'ur_good':
-						if(ratingPercent >= 1 && !usedPractice) {
-							unlock = true;
-						}
-					case 'roadkill_enthusiast':
-						if(Achievements.henchmenDeath >= 100) {
-							unlock = true;
-						}
-					case 'oversinging':
-						if(boyfriend.holdTimer >= 10 && !usedPractice) {
-							unlock = true;
-						}
-					case 'hype':
-						if(!boyfriendIdled && !usedPractice) {
-							unlock = true;
-						}
-					case 'two_keys':
-						if(!usedPractice) {
-							var howManyPresses:Int = 0;
-							for (j in 0...keysPressed.length) {
-								if(keysPressed[j]) howManyPresses++;
-							}
-
-							if(howManyPresses <= 2) {
-								unlock = true;
+					case 'tutorial_nomiss' | 'week1_nomiss' | 'week2_nomiss' | 'week3_nomiss' | 'week4_nomiss' | 'week5_nomiss' | 'week6_nomiss' | 'week7_nomiss':
+						if(isStoryMode && campaignMisses + songMisses < 1 && CoolUtil.difficultyString() == 'HARD' && storyPlaylist.length <= 1 && !changedDifficulty && !usedPractice)
+						{
+							var weekName:String = WeekData.getWeekFileName();
+							switch(weekName) //I know this is a lot of duplicated code, but it's easier readable and you can add weeks with different names than the achievement tag
+							{
+								case 'tutorial':
+									if(achievementName == 'tutorial_nomiss') unlock = true;
+								case 'week1':
+									if(achievementName == 'week1_nomiss') unlock = true;
+								case 'week2':
+									if(achievementName == 'week2_nomiss') unlock = true;
+								case 'week3':
+									if(achievementName == 'week3_nomiss') unlock = true;
+								case 'week4':
+									if(achievementName == 'week4_nomiss') unlock = true;
+								case 'week5':
+									if(achievementName == 'week5_nomiss') unlock = true;
+								case 'week6':
+									if(achievementName == 'week6_nomiss') unlock = true;
+								case 'week7':
+									if(achievementName == 'week7_nomiss') unlock = true;
 							}
 						}
-					case 'toastie':
-						if(/*ClientPrefs.framerate <= 60 &&*/ !ClientPrefs.shaders && ClientPrefs.lowQuality && !ClientPrefs.globalAntialiasing) {
-							unlock = true;
-						}
+				
 					case 'debugger':
-						if(Paths.formatToSongPath(SONG.song) == 'test' && !usedPractice) {
+						if(Paths.formatToSongPath(SONG.song) == '-debug' && CoolUtil.difficultyString() == 'HARD' && songMisses < 1 && !changedDifficulty && !usedPractice){
+							unlock = true;
+						}
+					case 'cruzes':
+						if(Paths.formatToSongPath(SONG.song) == 'earthquake' && CoolUtil.difficultyString() == 'HARD' && songMisses < 1 && !changedDifficulty && !usedPractice){
 							unlock = true;
 						}
 				}
@@ -7771,6 +7753,6 @@ class PlayState extends MusicBeatState
 	}
 	#end
 
-	var curLight:Int = -1;
-	var curLightEvent:Int = -1;
+	var curLight:Int = 0;
+	var curLightEvent:Int = 0;
 }
